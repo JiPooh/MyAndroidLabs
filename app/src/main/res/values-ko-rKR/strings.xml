@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jihoo\'s Android Labs</string>
+    <string name="hello_message">안녕 세계야!</string>
+    <string name="button_message">저는 버튼이에요</string>
+</resources>
