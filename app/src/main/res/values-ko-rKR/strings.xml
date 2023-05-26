@@ -3,4 +3,7 @@
     <string name="app_name">Jihoo\'s Android Labs</string>
     <string name="hello_message">안녕 세계야!</string>
     <string name="button_message">저는 버튼이에요</string>
+    <string name="button1">조작단추 1</string>
+    <string name="button2">조작단추 2</string>
+    <string name="button3">조작단추 3</string>
 </resources>
