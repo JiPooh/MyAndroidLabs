@@ -2,4 +2,10 @@
     <string name="app_name">Jihoo\'s Android Labs</string>
     <string name="hello_message">Hello world!</string>
     <string name="button_message">I\'m a button</string>
+    <string name="email_req">Enter your email address</string>
+    <string name="pass_req">Type your password</string>
+    <string name="email_here">Type email here</string>
+    <string name="login">LOGIN</string>
+    <string name="call_butt">Call number</string>
+    <string name="change_butt">Change picture</string>
 </resources>
