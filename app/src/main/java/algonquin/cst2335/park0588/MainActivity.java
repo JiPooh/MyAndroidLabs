@@ -2,7 +2,9 @@ package algonquin.cst2335.park0588;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -18,12 +20,18 @@ public class MainActivity extends AppCompatActivity {
         variableBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(variableBinding.getRoot());
         Log.w("MainActivity","In onCreate() - Loading Widgets");
+
+        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        String emailAddress = prefs.getString("LoginName", "");
+
         variableBinding.logButt.setOnClickListener( clk-> {
             Intent nextPage = new Intent(MainActivity.this, SecondActivity.class);
             nextPage.putExtra("EmailAddress", variableBinding.email.getText().toString());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("LoginName", variableBinding.email.getText().toString());
+            editor.apply();
             startActivity(nextPage);
         });
-
         /*Button nextButt = findViewById(R.id.logButt);
         nextButt.setOnClickListener( clk-> {
             Intent nextPage = new Intent(MainActivity.this, SecondActivity.class);
