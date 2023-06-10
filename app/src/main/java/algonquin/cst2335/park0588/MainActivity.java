@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         String emailAddress = prefs.getString("LoginName", "");
-
+        variableBinding.email.setText(emailAddress);
         variableBinding.logButt.setOnClickListener( clk-> {
             Intent nextPage = new Intent(MainActivity.this, SecondActivity.class);
             nextPage.putExtra("EmailAddress", variableBinding.email.getText().toString());

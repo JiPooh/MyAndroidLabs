@@ -41,6 +41,8 @@ public class SecondActivity extends AppCompatActivity {
         String emailAddress = fromPrev.getStringExtra("EmailAddress");
         variableBinding.textView3.setText("Welcome back, " + emailAddress);
         SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        String phoneNum = prefs.getString("MyPhone", "");
+        variableBinding.editTextPhone.setText(phoneNum);
 
         File file = new File( getFilesDir(), "Picture.png");
         if(file.exists()) {
@@ -97,7 +99,6 @@ public class SecondActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
-        String phoneNum = prefs.getString("MyPhone", "");
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("MyPhone", variableBinding.editTextPhone.getText().toString());
         editor.apply();
