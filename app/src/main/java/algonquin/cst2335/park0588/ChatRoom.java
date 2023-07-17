@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -125,6 +127,15 @@ private ArrayList<ChatMessage> messages;
             binding.editTextSent.setText("");
         });
         binding.rv.setLayoutManager(new LinearLayoutManager(this));
+        chatModel.selectedMessage.observe(this, (newMessageValue) -> {
+            MessageDetailsFragment chatFragment = new MessageDetailsFragment(newMessageValue);
+            getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.fgmt, chatFragment)
+            .addToBackStack("")
+            .commit();
+
+        });
 
     }
 
@@ -142,27 +153,31 @@ private ArrayList<ChatMessage> messages;
             timeText = itemView.findViewById(R.id.time);
             itemView.setOnClickListener(clk ->{
                 int position = getAbsoluteAdapterPosition();
-                AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
-                builder.setMessage("Do you wish to delete this message: '"
-                        + messageText.getText() + "' ?")
-                        .setTitle("Question")
-                        .setPositiveButton("Yes",(dialog, cl) -> {
-                    ChatMessage m = messages.get(position);
-                    ChatMessage removedText = messages.get(position);
-                    Executor thread = Executors.newSingleThreadExecutor();
-                            thread.execute(()-> {
-                    mDAO.deleteMessage(m);});
-                    messages.remove(position);
-                    myAdapter.notifyItemRemoved(position);
-                    Snackbar.make(messageText, "You deleted message #" + position, Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", clck ->{
-                                messages.add(position, removedText);
-                                myAdapter.notifyItemInserted(position);
-                            })
-                            .show();
-                })
-                        .setNegativeButton("No", (dialog, cl) -> {})
-                        .create().show();
+                ChatMessage selected = messages.get(position);
+                chatModel.selectedMessage.postValue(selected);
+                //delete selected message
+//                int position = getAbsoluteAdapterPosition();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
+//                builder.setMessage("Do you wish to delete this message: '"
+//                        + messageText.getText() + "' ?")
+//                        .setTitle("Question")
+//                        .setPositiveButton("Yes",(dialog, cl) -> {
+//                    ChatMessage m = messages.get(position);
+//                    ChatMessage removedText = messages.get(position);
+//                    Executor thread = Executors.newSingleThreadExecutor();
+//                            thread.execute(()-> {
+//                    mDAO.deleteMessage(m);});
+//                    messages.remove(position);
+//                    myAdapter.notifyItemRemoved(position);
+//                    Snackbar.make(messageText, "You deleted message #" + position, Snackbar.LENGTH_LONG)
+//                            .setAction("UNDO", clck ->{
+//                                messages.add(position, removedText);
+//                                myAdapter.notifyItemInserted(position);
+//                            })
+//                            .show();
+//                })
+//                        .setNegativeButton("No", (dialog, cl) -> {})
+//                        .create().show();
             });
 
         }
