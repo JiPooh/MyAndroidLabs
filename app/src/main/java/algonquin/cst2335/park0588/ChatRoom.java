@@ -13,9 +13,12 @@ import androidx.room.Room;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -35,11 +38,13 @@ private ActivityChatRoomBinding binding;
 private RecyclerView.Adapter myAdapter;
 private ChatRoomViewModel chatModel;
 private ArrayList<ChatMessage> messages;
+private int position = RecyclerView.NO_POSITION;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.tool);
         MessageDatabase db = Room.databaseBuilder(
                 getApplicationContext(), MessageDatabase.class, "database-name").build();
         ChatMessageDAO mDAO = db.cmDAO();
@@ -152,7 +157,7 @@ private ArrayList<ChatMessage> messages;
             messageText = itemView.findViewById(R.id.message);
             timeText = itemView.findViewById(R.id.time);
             itemView.setOnClickListener(clk ->{
-                int position = getAbsoluteAdapterPosition();
+                position = getAbsoluteAdapterPosition();
                 ChatMessage selected = messages.get(position);
                 chatModel.selectedMessage.postValue(selected);
                 //delete selected message
@@ -181,6 +186,55 @@ private ArrayList<ChatMessage> messages;
             });
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.trash:
+                MessageDatabase db;
+                ChatMessageDAO mDAO;
+                TextView messageText;
+                TextView timeText;
+                db = Room.databaseBuilder(
+                        getApplicationContext(), MessageDatabase.class, "database-name").build();
+                mDAO = db.cmDAO();
+                messageText = findViewById(R.id.message);
+                timeText = findViewById(R.id.time);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
+                builder.setMessage("Do you wish to delete this message: '"
+                        + messageText.getText() + "' ?")
+                        .setTitle("Question")
+                        .setPositiveButton("Yes",(dialog, cl) -> {
+                    ChatMessage m = messages.get(position);
+                    ChatMessage removedText = messages.get(position);
+                    Executor thread = Executors.newSingleThreadExecutor();
+                            thread.execute(()-> {
+                    mDAO.deleteMessage(m);});
+                    messages.remove(position);
+                    myAdapter.notifyItemRemoved(position);
+                    Snackbar.make(messageText, "You deleted message #" + position, Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", clck ->{
+                                messages.add(position, removedText);
+                                myAdapter.notifyItemInserted(position);
+                            })
+                            .show();
+                })
+                        .setNegativeButton("No", (dialog, cl) -> {})
+                        .create().show();
+
+                break;
+        }
+        return true;
     }
 
 }

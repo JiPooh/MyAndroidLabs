@@ -9,6 +9,13 @@
         android:id="@+id/fgmt"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/tool"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</androidx.appcompat.widget.Toolbar>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"

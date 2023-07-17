@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/trash"
+        android:icon="@drawable/garbage"
+        android:title="Delete this item"
+        app:showAsAction="never" />
+</menu>

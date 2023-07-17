@@ -25,6 +25,11 @@ public class MessageDetailsFragment extends Fragment {
         binding.msgDet.setText(selected.message);
         binding.timeDet.setText(selected.timeSent);
         binding.idDet.setText("ID = " + selected.id);
+        if(selected.getIsSentButton()){
+            binding.senderDet.setText("Sent");
+        }else{
+            binding.senderDet.setText("Received");
+        }
 
         return binding.getRoot();
     }
