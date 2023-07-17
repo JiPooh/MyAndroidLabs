@@ -197,9 +197,10 @@ private int position = RecyclerView.NO_POSITION;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch(item.getItemId()){
-            case R.id.trash:
+        if(item.getItemId() == R.id.trash){
+            if(position == RecyclerView.NO_POSITION) {
+                Toast.makeText(this, "No message was selected", Toast.LENGTH_SHORT).show();
+            }else {
                 MessageDatabase db;
                 ChatMessageDAO mDAO;
                 TextView messageText;
@@ -212,29 +213,32 @@ private int position = RecyclerView.NO_POSITION;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
                 builder.setMessage("Do you wish to delete this message: '"
-                        + messageText.getText() + "' ?")
+                                + messageText.getText() + "' ?")
                         .setTitle("Question")
-                        .setPositiveButton("Yes",(dialog, cl) -> {
-                    ChatMessage m = messages.get(position);
-                    ChatMessage removedText = messages.get(position);
-                    Executor thread = Executors.newSingleThreadExecutor();
-                            thread.execute(()-> {
-                    mDAO.deleteMessage(m);});
-                    messages.remove(position);
-                    myAdapter.notifyItemRemoved(position);
-                    Snackbar.make(messageText, "You deleted message #" + position, Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", clck ->{
-                                messages.add(position, removedText);
-                                myAdapter.notifyItemInserted(position);
-                            })
-                            .show();
-                })
-                        .setNegativeButton("No", (dialog, cl) -> {})
+                        .setPositiveButton("Yes", (dialog, cl) -> {
+                            ChatMessage m = messages.get(position);
+                            ChatMessage removedText = messages.get(position);
+                            Executor thread = Executors.newSingleThreadExecutor();
+                            thread.execute(() -> {
+                                mDAO.deleteMessage(m);
+                            });
+                            messages.remove(position);
+                            myAdapter.notifyItemRemoved(position);
+                            Snackbar.make(messageText, "You deleted message #" + position, Snackbar.LENGTH_LONG)
+                                    .setAction("UNDO", clck -> {
+                                        messages.add(position, removedText);
+                                        myAdapter.notifyItemInserted(position);
+                                    })
+                                    .show();
+                        })
+                        .setNegativeButton("No", (dialog, cl) -> {
+                        })
                         .create().show();
+            }} else if (item.getItemId() == R.id.about) {
+                Toast.makeText(this, "Lab week 9, learning to use a toolbar, by Jihoo Park", Toast.LENGTH_SHORT).show();
+            }
 
-                break;
-        }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
 }
